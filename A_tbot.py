@@ -8,17 +8,10 @@ from dotenv import load_dotenv
 from os import getenv
 
 from aiogram import Bot, types, Dispatcher
-# from aiogram.enums import ParseMode
-# from aiogram.filters import Command
 
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.schema import (
-    AIMessage,
-    HumanMessage,
-    SystemMessage
-)
 from langchain.llms import GPT4All, LlamaCpp
 from langchain.vectorstores import Chroma
 from langchain import PromptTemplate
@@ -67,7 +60,6 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff', retriever=retrieve
         ),
     },)
 
-# bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 bot = Bot(TOKEN)
 dp = Dispatcher(bot=bot)
 
