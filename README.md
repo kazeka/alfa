@@ -1,4 +1,4 @@
-## Сборка
+## Build/Сборка
 
 ```bash
 git submodule init
@@ -18,7 +18,15 @@ python3 src/A_tbot.py
 ```
 
 
-## Описание
+## Description/Описание
+
+Connected to a telegram bot, running python code (eg aiogram, telegram.ext), using any local LLM model (without well-known APIs, eg ChatGPT, YandexGPT), capable of conducting a dialogue in Russian.
+The implementation must include a finetuning model, for example, through parsing publicly available information from the site https://alfabank.by/
+
+Создать работающий сервис на базе python + telegram bot + LLM local + finetune dataset
+
+Подключенный к telegram-боту, работающий python-код (напр. aiogram, telegram.ext), использующий любую локальную LLM модель (без общеизвестных API, напр. ChatGPT, YandexGPT), способный вести диалог на русском языке.
+Реализация должна включать finetuning model, например через парсинг общедоступной информации с сайта https://alfabank.by/
 
 Создать работающий сервис на базе python + telegram bot + LLM local + finetune dataset
 
@@ -35,6 +43,7 @@ PS: полезные ссылки для выполнения ТЗ
 1. https://the-eye.eu/public/AI/
 1. https://gpt4all.io/index.html
 1. https://medium.com/@kennethleungty/running-llama-2-on-cpu-inference-for-document-q-a-3d636037a3d8?source=email-b514a69ac1c5-1690070070505-digest.reader-7f60cf5620c9-3d636037a3d8----0-73------------------83e886a6_8f10_4ba6_82f6_da6c4318e741-1
+1. https://archive.li/EJTp0
 
 Пример демонстрации диалога в ожидаемой реализации:
 Запрос в tg: «Какую кредитную карту я могу оформить в Альфабанк Беларусь?»
