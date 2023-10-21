@@ -4,7 +4,7 @@ import logging
 import sys
 
 from chromadb.config import Settings
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from os import getenv
 
 from aiogram import Bot, types, Dispatcher
@@ -16,9 +16,8 @@ from langchain.llms import GPT4All, LlamaCpp
 from langchain.vectorstores import Chroma
 from langchain import PromptTemplate
 
-if not load_dotenv():
-    print('Could not load .env file or it is empty. Please check if it exists and is readable.')
-    exit(1)
+_ = load_dotenv(find_dotenv())
+
 
 EMBEDDINGS_MODEL_NAME = getenv('EMBEDDINGS_MODEL_NAME')
 PERSIST_DIRECTORY = getenv('PERSIST_DIRECTORY')
@@ -41,15 +40,19 @@ TEMPLATE = """Use the following pieces of context to answer the question at the 
 Question: {question}
 Answer in Russian:"""
 
+
 embeddings = HuggingFaceEmbeddings(model_name=EMBEDDINGS_MODEL_NAME)
 chroma_client = chromadb.PersistentClient(settings=CHROMA_SETTINGS, path=PERSIST_DIRECTORY)
 db = Chroma(persist_directory=PERSIST_DIRECTORY, embedding_function=embeddings, client_settings=CHROMA_SETTINGS, client=chroma_client)
 retriever = db.as_retriever(search_kwargs={'k': TARGET_SOURCE_CHUNKS})
 callbacks=[StreamingStdOutCallbackHandler()]
 
+
 match MODEL_TYPE:
     case 'LlamaCpp':
-        llm = LlamaCpp(model_path=MODEL_PATH, max_tokens=MODEL_N_CTX, n_ctx=MODEL_N_CTX, n_batch=MODEL_N_BATCH, callbacks=callbacks, verbose=True)
+        n_gpu_layers = 40  # Change this value based on your model and your GPU VRAM pool.
+        n_batch = 512  # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
+        llm = LlamaCpp(model_path=MODEL_PATH, n_gpu_layers=n_gpu_layers, max_tokens=MODEL_N_CTX, n_ctx=MODEL_N_CTX, n_batch=MODEL_N_BATCH, callbacks=callbacks, verbose=True)
     case 'GPT4All':
         llm = GPT4All(model=MODEL_PATH, max_tokens=MODEL_N_CTX, backend='gptj', n_batch=MODEL_N_BATCH, callbacks=callbacks, verbose=False)
 
@@ -59,6 +62,7 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff', retriever=retrieve
             input_variables=['context', 'question'],
         ),
     },)
+
 
 bot = Bot(TOKEN)
 dp = Dispatcher(bot=bot)

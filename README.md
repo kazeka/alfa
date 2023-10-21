@@ -13,7 +13,7 @@ pushd privateGPT && python3 ingest.py && popd
 ln -s privateGPT/db
 wget https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/resolve/main/llama-2-7b-chat.ggmlv3.q4_0.bin
 mv llama-2-7b-chat.ggmlv3.q4_0.bin models/
-python3 src/A_tbot.py
+python3 src/tbot.py
 
 ```
 
